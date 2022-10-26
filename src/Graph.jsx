@@ -49,9 +49,11 @@ function Graph({
 
         const resizeObserver = new ResizeObserver(
             lodash.debounce(() => {
+                if (domRef.current) {
                 const style = getComputedStyle(domRef.current);
                 domRef.current.style.height = `${Math.round(Number(style.width.replace('px', '')) / 2)}px`;
                 cy.fit();
+                }
             }, 300),
         );
 
