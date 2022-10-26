@@ -3,7 +3,8 @@ import CyDomNode from 'cytoscape-dom-node';
 import lodash from 'lodash';
 import { PropTypes } from 'prop-types';
 import React, {
-    useEffect, useRef, useState,
+    forwardRef,
+    useEffect, useImperativeHandle, useRef, useState,
 } from 'react';
 
 Cytoscape.use(CyDomNode);
@@ -16,7 +17,7 @@ Cytoscape.use(CyDomNode);
  */
 function Graph({
     cyParams, layoutParams, layoutDebounce, children,
-}) {
+}, ref) {
     const [ready, setReady] = useState(false);
     const domRef = useRef(null);
     const cytoscapeRef = useRef(null);
@@ -50,9 +51,9 @@ function Graph({
         const resizeObserver = new ResizeObserver(
             lodash.debounce(() => {
                 if (domRef.current) {
-                const style = getComputedStyle(domRef.current);
-                domRef.current.style.height = `${Math.round(Number(style.width.replace('px', '')) / 2)}px`;
-                cy.fit();
+                    const style = getComputedStyle(domRef.current);
+                    domRef.current.style.height = `${Math.round(Number(style.width.replace('px', '')) / 2)}px`;
+                    cy.fit();
                 }
             }, 300),
         );
@@ -84,6 +85,8 @@ function Graph({
         </div>
     );
 }
+
+Graph = forwardRef(Graph)
 
 Graph.propTypes = {
     children: PropTypes.oneOfType([
