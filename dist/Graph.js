@@ -42,7 +42,7 @@ _cytoscape.default.use(_cytoscapeDomNode.default);
  */
 
 
-function Graph(_ref) {
+function Graph(_ref, ref) {
   let {
     cyParams,
     layoutParams,
@@ -65,7 +65,9 @@ function Graph(_ref) {
 
   const debouncedRunLayout = _lodash.default.debounce(runLayout, layoutDebounce);
 
-  (0, _react.useEffect)(() => {
+  (0, _react.useLayoutEffect)(() => {
+    console.log(domRef);
+
     const augmentedCyParams = _objectSpread({
       container: domRef.current,
       style: [{
@@ -84,15 +86,18 @@ function Graph(_ref) {
     cytoscapeRef.current = cy;
     setReady(true);
     const resizeObserver = new ResizeObserver(_lodash.default.debounce(() => {
-      const style = getComputedStyle(domRef.current);
-      domRef.current.style.height = "".concat(Math.round(Number(style.width.replace('px', '')) / 2), "px");
-      cy.fit();
+      if (domRef.current) {
+        const style = getComputedStyle(domRef.current);
+        domRef.current.style.height = "".concat(Math.round(Number(style.width.replace('px', '')) / 2), "px");
+        cy.fit();
+      }
     }, 300));
     resizeObserver.observe(domRef.current);
     return () => {
       resizeObserver.disconnect();
     };
-  }, []);
+  }, [domRef.current]);
+  (0, _react.useImperativeHandle)(ref, () => cytoscapeRef.current);
   (0, _react.useEffect)(() => {
     debouncedRunLayout();
   }, [ready, layoutParams]);
@@ -113,6 +118,7 @@ function Graph(_ref) {
   }, nodesAndEdges));
 }
 
+Graph = /*#__PURE__*/(0, _react.forwardRef)(Graph);
 Graph.propTypes = {
   children: _propTypes.PropTypes.oneOfType([_propTypes.PropTypes.arrayOf(_propTypes.PropTypes.node), _propTypes.PropTypes.node]).isRequired,
   layoutParams: _propTypes.PropTypes.shape({}),
