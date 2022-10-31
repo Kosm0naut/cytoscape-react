@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from 'react';
  * @returns {React.ReactElement} component
  */
 function Edge({
-    cytoInstance, id, source, target, children, layout,
+    cytoInstance, id, source, target, children, layout, onClick
 }) {
     const domRef = useRef();
     const [missing, setMissing] = useState(2);
@@ -52,6 +52,11 @@ function Edge({
 
         cytoInstance.on('add', 'node', onAddNode);
         cytoInstance.on('remove', 'node', onRemoveNode);
+        cytoInstance.on('tap', function (event) {
+            if (event.target.isEdge()) {
+                onClick && onClick(event)
+            }
+        })
 
         return () => {
             cytoInstance.getElementById(id).remove();

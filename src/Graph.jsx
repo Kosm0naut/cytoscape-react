@@ -33,6 +33,11 @@ function Graph({
 
     const debouncedRunLayout = lodash.debounce(runLayout, layoutDebounce);
 
+    useImperativeHandle(ref, () => ({
+        cyRef: cytoscapeRef,
+        domRef: domRef,
+    }))
+
     useEffect(() => {
         const augmentedCyParams = {
             container: domRef.current,
