@@ -28,7 +28,8 @@ function Edge(_ref) {
     source,
     target,
     children,
-    layout
+    layout,
+    onClick
   } = _ref;
   const domRef = (0, _react.useRef)();
   const [missing, setMissing] = (0, _react.useState)(2);
@@ -109,6 +110,11 @@ function Edge(_ref) {
 
     cytoInstance.on('add', 'node', onAddNode);
     cytoInstance.on('remove', 'node', onRemoveNode);
+    cytoInstance.on('tap', function (event) {
+      if (event.target.isEdge()) {
+        onClick && onClick(event);
+      }
+    });
     return () => {
       cytoInstance.getElementById(id).remove();
       cytoInstance.off('add', 'node', onAddNode);

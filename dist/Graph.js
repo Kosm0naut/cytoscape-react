@@ -65,9 +65,11 @@ function Graph(_ref, ref) {
 
   const debouncedRunLayout = _lodash.default.debounce(runLayout, layoutDebounce);
 
-  (0, _react.useLayoutEffect)(() => {
-    console.log(domRef);
-
+  (0, _react.useImperativeHandle)(ref, () => ({
+    cyRef: cytoscapeRef,
+    domRef: domRef
+  }));
+  (0, _react.useEffect)(() => {
     const augmentedCyParams = _objectSpread({
       container: domRef.current,
       style: [{
@@ -96,8 +98,7 @@ function Graph(_ref, ref) {
     return () => {
       resizeObserver.disconnect();
     };
-  }, [domRef.current]);
-  (0, _react.useImperativeHandle)(ref, () => cytoscapeRef.current);
+  }, []);
   (0, _react.useEffect)(() => {
     debouncedRunLayout();
   }, [ready, layoutParams]);
