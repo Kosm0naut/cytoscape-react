@@ -111,7 +111,9 @@ function Edge(_ref) {
     cytoInstance.on('add', 'node', onAddNode);
     cytoInstance.on('remove', 'node', onRemoveNode);
     cytoInstance.on('tap', function (event) {
-      if (event.target.isEdge()) {
+      var _event$target;
+
+      if (event !== null && event !== void 0 && (_event$target = event.target) !== null && _event$target !== void 0 && _event$target.isEdge && event.target.isEdge()) {
         onClick && onClick(event);
       }
     });
