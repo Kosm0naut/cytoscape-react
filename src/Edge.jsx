@@ -50,18 +50,24 @@ function Edge({
             }
         }
 
+        function onEdgeClick(ev) {
+            ev.preventDefault()
+            ev.stopPropagation()
+            const evId = ev.target.id()
+            if (evId === id) {
+                onClick && onClick(ev)
+            }
+        }
+
         cytoInstance.on('add', 'node', onAddNode);
         cytoInstance.on('remove', 'node', onRemoveNode);
-        cytoInstance.on('tap', function (event) {
-            if (event?.target?.isEdge && event.target.isEdge()) {
-                onClick && onClick(event)
-            }
-        })
+        cytoInstance.on('tapend', 'edge', onEdgeClick)
 
         return () => {
             cytoInstance.getElementById(id).remove();
             cytoInstance.off('add', 'node', onAddNode);
             cytoInstance.off('remove', 'node', onRemoveNode);
+            cytoInstance.off('tapend', 'edge', onEdgeClick)
         };
     }, []);
 

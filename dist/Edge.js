@@ -108,19 +108,24 @@ function Edge(_ref) {
       }
     }
 
+    function onEdgeClick(ev) {
+      ev.preventDefault();
+      ev.stopPropagation();
+      const evId = ev.target.id();
+
+      if (evId === id) {
+        onClick && onClick(ev);
+      }
+    }
+
     cytoInstance.on('add', 'node', onAddNode);
     cytoInstance.on('remove', 'node', onRemoveNode);
-    cytoInstance.on('tap', function (event) {
-      var _event$target;
-
-      if (event !== null && event !== void 0 && (_event$target = event.target) !== null && _event$target !== void 0 && _event$target.isEdge && event.target.isEdge()) {
-        onClick && onClick(event);
-      }
-    });
+    cytoInstance.on('tapend', 'edge', onEdgeClick);
     return () => {
       cytoInstance.getElementById(id).remove();
       cytoInstance.off('add', 'node', onAddNode);
       cytoInstance.off('remove', 'node', onRemoveNode);
+      cytoInstance.off('tapend', 'edge', onEdgeClick);
     };
   }, []);
   (0, _react.useEffect)(() => {
