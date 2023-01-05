@@ -29,6 +29,7 @@ function Edge(_ref) {
     target,
     children,
     layout,
+    label,
     onClick
   } = _ref;
   const domRef = (0, _react.useRef)();
@@ -68,7 +69,8 @@ function Edge(_ref) {
       addEdge({
         id,
         source,
-        target
+        target,
+        label
       });
     }
 
@@ -86,7 +88,8 @@ function Edge(_ref) {
           addEdge({
             id,
             source,
-            target
+            target,
+            label
           });
         }
       }

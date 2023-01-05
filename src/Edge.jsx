@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from 'react';
  * @returns {React.ReactElement} component
  */
 function Edge({
-    cytoInstance, id, source, target, children, layout, onClick
+    cytoInstance, id, source, target, children, layout, label, onClick
 }) {
     const domRef = useRef();
     const [missing, setMissing] = useState(2);
@@ -29,14 +29,14 @@ function Edge({
     useEffect(() => {
         const nowMissing = missingNodeCount(source, target);
         if (nowMissing !== missing) { setMissing(nowMissing); }
-        if (nowMissing === 0) { addEdge({ id, source, target }); }
+        if (nowMissing === 0) { addEdge({ id, source, target, label }); }
 
         function onAddNode(ev) {
             const evId = ev.target.id();
             if (evId === source || evId === target) {
                 const postEvMissing = missingNodeCount(source, target);
                 if (postEvMissing !== missing) { setMissing(postEvMissing); }
-                if (postEvMissing === 0) { addEdge({ id, source, target }); }
+                if (postEvMissing === 0) { addEdge({ id, source, target, label }); }
             }
         }
 

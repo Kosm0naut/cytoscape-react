@@ -28,6 +28,11 @@ function Graph({
             layoutRef.current.stop();
         }
         layoutRef.current = cytoscapeRef.current.layout(layoutParams);
+
+        cytoscapeRef.current.ready(function () {
+            cytoscapeRef.current.fit()
+            cytoscapeRef.current.center()
+        })
         layoutRef.current.run();
     }
 
@@ -52,33 +57,16 @@ function Graph({
         cy.domNode({ dom_container: domRef.current.querySelector('.cytoscape-react-nodes-and-edges') });
         cytoscapeRef.current = cy;
         setReady(true);
-
-        const resizeObserver = new ResizeObserver(
-            lodash.debounce(() => {
-                if (domRef.current) {
-                    const style = getComputedStyle(domRef.current);
-                    domRef.current.style.height = `${Math.round(Number(style.width.replace('px', '')) / 2)}px`;
-                    cy.fit();
-                }
-            }, 300),
-        );
-
-        resizeObserver.observe(domRef.current);
-
-        return () => {
-            resizeObserver.disconnect();
-        };
     }, []);
 
     useEffect(() => {
         debouncedRunLayout();
-    }, [ready, layoutParams]);
+    }, [children]);
 
     let nodesAndEdges = [];
     if (cytoscapeRef.current !== null) {
         nodesAndEdges = React.Children.map(children, (c) => React.cloneElement(c, {
             cytoInstance: cytoscapeRef.current,
-            layout: debouncedRunLayout,
         }));
     }
 
