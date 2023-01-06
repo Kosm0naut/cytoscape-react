@@ -1,13 +1,10 @@
 import Cytoscape from 'cytoscape';
-import CyDomNode from 'cytoscape-dom-node';
 import lodash from 'lodash';
 import { PropTypes } from 'prop-types';
 import React, {
     forwardRef,
-    useEffect, useImperativeHandle, useRef, useState,
+    useEffect, useImperativeHandle, useRef
 } from 'react';
-
-Cytoscape.use(CyDomNode);
 
 /**
  * Cytoscape graph React component.
@@ -18,7 +15,6 @@ Cytoscape.use(CyDomNode);
 function Graph({
     cyParams, layoutParams, layoutDebounce, children,
 }, ref) {
-    const [ready, setReady] = useState(false);
     const domRef = useRef(null);
     const cytoscapeRef = useRef(null);
     const layoutRef = useRef(null);
@@ -56,7 +52,6 @@ function Graph({
         const cy = Cytoscape(augmentedCyParams);
         cy.domNode({ dom_container: domRef.current.querySelector('.cytoscape-react-nodes-and-edges') });
         cytoscapeRef.current = cy;
-        setReady(true);
     }, []);
 
     useEffect(() => {
