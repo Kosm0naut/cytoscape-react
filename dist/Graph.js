@@ -1,15 +1,11 @@
 "use strict";
 
+require("core-js/modules/web.dom-collections.iterator.js");
+
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
-
-require("core-js/modules/web.dom-collections.iterator.js");
-
-require("core-js/modules/es.regexp.exec.js");
-
-require("core-js/modules/es.string.replace.js");
 
 var _cytoscape = _interopRequireDefault(require("cytoscape"));
 
@@ -49,7 +45,6 @@ function Graph(_ref, ref) {
     layoutDebounce,
     children
   } = _ref;
-  const [ready, setReady] = (0, _react.useState)(false);
   const domRef = (0, _react.useRef)(null);
   const cytoscapeRef = (0, _react.useRef)(null);
   const layoutRef = (0, _react.useRef)(null);
@@ -60,6 +55,10 @@ function Graph(_ref, ref) {
     }
 
     layoutRef.current = cytoscapeRef.current.layout(layoutParams);
+    cytoscapeRef.current.ready(function () {
+      cytoscapeRef.current.fit();
+      cytoscapeRef.current.center();
+    });
     layoutRef.current.run();
   }
 
@@ -86,28 +85,15 @@ function Graph(_ref, ref) {
       dom_container: domRef.current.querySelector('.cytoscape-react-nodes-and-edges')
     });
     cytoscapeRef.current = cy;
-    setReady(true);
-    const resizeObserver = new ResizeObserver(_lodash.default.debounce(() => {
-      if (domRef.current) {
-        const style = getComputedStyle(domRef.current);
-        domRef.current.style.height = "".concat(Math.round(Number(style.width.replace('px', '')) / 2), "px");
-        cy.fit();
-      }
-    }, 300));
-    resizeObserver.observe(domRef.current);
-    return () => {
-      resizeObserver.disconnect();
-    };
   }, []);
   (0, _react.useEffect)(() => {
     debouncedRunLayout();
-  }, [ready, layoutParams]);
+  }, [children]);
   let nodesAndEdges = [];
 
   if (cytoscapeRef.current !== null) {
     nodesAndEdges = _react.default.Children.map(children, c => /*#__PURE__*/_react.default.cloneElement(c, {
-      cytoInstance: cytoscapeRef.current,
-      layout: debouncedRunLayout
+      cytoInstance: cytoscapeRef.current
     }));
   }
 

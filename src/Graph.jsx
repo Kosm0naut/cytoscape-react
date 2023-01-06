@@ -1,10 +1,13 @@
 import Cytoscape from 'cytoscape';
+import CyDomNode from 'cytoscape-dom-node';
 import lodash from 'lodash';
 import { PropTypes } from 'prop-types';
 import React, {
     forwardRef,
-    useEffect, useImperativeHandle, useRef
+    useEffect, useImperativeHandle, useRef, useState,
 } from 'react';
+
+Cytoscape.use(CyDomNode);
 
 /**
  * Cytoscape graph React component.
