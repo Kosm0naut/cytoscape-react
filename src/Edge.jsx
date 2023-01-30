@@ -1,5 +1,5 @@
-import { PropTypes } from 'prop-types';
-import React, { useEffect, useRef, useState } from 'react';
+import { PropTypes } from 'prop-types'
+import React, { useEffect, useRef, useState } from 'react'
 
 /**
  * Cytoscape edge React component.
@@ -76,11 +76,15 @@ function Edge({
             cytoInstance.off('tapend', 'edge', onEdgeClick)
             cytoInstance.off('cxttapend', 'edge', onEdgeContext)
         };
-    }, []);
+    }, [onClick, onContextMenu]);
 
-    useEffect(() => {
-        layout();
-    }, [id, children]);
+	useEffect(() => {
+		const edge = cytoInstance.$(`#${id}`)
+		if (edge) {
+			edge.data('label', label)
+			layout()
+		}
+	}, [children, label, layout])
 
     if (missing > 0) { return null; }
 

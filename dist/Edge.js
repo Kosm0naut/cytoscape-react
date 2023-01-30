@@ -139,10 +139,15 @@ function Edge(_ref) {
       cytoInstance.off('tapend', 'edge', onEdgeClick);
       cytoInstance.off('cxttapend', 'edge', onEdgeContext);
     };
-  }, []);
+  }, [onClick, onContextMenu]);
   (0, _react.useEffect)(() => {
-    layout();
-  }, [id, children]);
+    const edge = cytoInstance.$("#".concat(id));
+
+    if (edge) {
+      edge.data('label', label);
+      layout();
+    }
+  }, [children, label, layout]);
 
   if (missing > 0) {
     return null;
