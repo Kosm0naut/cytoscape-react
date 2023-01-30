@@ -30,7 +30,8 @@ function Edge(_ref) {
     children,
     layout,
     label,
-    onClick
+    onClick,
+    onContextMenu
   } = _ref;
   const domRef = (0, _react.useRef)();
   const [missing, setMissing] = (0, _react.useState)(2);
@@ -112,23 +113,31 @@ function Edge(_ref) {
     }
 
     function onEdgeClick(ev) {
-      ev.preventDefault();
-      ev.stopPropagation();
       const evId = ev.target.id();
 
       if (evId === id) {
-        onClick && onClick(ev);
+        return onClick === null || onClick === void 0 ? void 0 : onClick(ev);
+      }
+    }
+
+    function onEdgeContext(ev) {
+      const evId = ev.target.id();
+
+      if (evId === id) {
+        return onContextMenu === null || onContextMenu === void 0 ? void 0 : onContextMenu(ev);
       }
     }
 
     cytoInstance.on('add', 'node', onAddNode);
     cytoInstance.on('remove', 'node', onRemoveNode);
     cytoInstance.on('tapend', 'edge', onEdgeClick);
+    cytoInstance.on('cxttapend', 'edge', onEdgeContext);
     return () => {
       cytoInstance.getElementById(id).remove();
       cytoInstance.off('add', 'node', onAddNode);
       cytoInstance.off('remove', 'node', onRemoveNode);
       cytoInstance.off('tapend', 'edge', onEdgeClick);
+      cytoInstance.off('cxttapend', 'edge', onEdgeContext);
     };
   }, []);
   (0, _react.useEffect)(() => {

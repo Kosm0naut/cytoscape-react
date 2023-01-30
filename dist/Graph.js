@@ -1,11 +1,11 @@
 "use strict";
 
-require("core-js/modules/web.dom-collections.iterator.js");
-
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
 exports.default = void 0;
+
+require("core-js/modules/web.dom-collections.iterator.js");
 
 var _cytoscape = _interopRequireDefault(require("cytoscape"));
 
@@ -45,6 +45,7 @@ function Graph(_ref, ref) {
     layoutDebounce,
     children
   } = _ref;
+  const [ready, setReady] = (0, _react.useState)(false);
   const domRef = (0, _react.useRef)(null);
   const cytoscapeRef = (0, _react.useRef)(null);
   const layoutRef = (0, _react.useRef)(null);
@@ -85,10 +86,11 @@ function Graph(_ref, ref) {
       dom_container: domRef.current.querySelector('.cytoscape-react-nodes-and-edges')
     });
     cytoscapeRef.current = cy;
+    setReady(true);
   }, []);
   (0, _react.useEffect)(() => {
     debouncedRunLayout();
-  }, [children]);
+  }, [children, ready]);
   let nodesAndEdges = [];
 
   if (cytoscapeRef.current !== null) {

@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useState } from 'react';
  * @returns {React.ReactElement} component
  */
 function Edge({
-    cytoInstance, id, source, target, children, layout, label, onClick
+    cytoInstance, id, source, target, children, layout, label, onClick, onContextMenu
 }) {
     const domRef = useRef();
     const [missing, setMissing] = useState(2);
@@ -51,23 +51,30 @@ function Edge({
         }
 
         function onEdgeClick(ev) {
-            ev.preventDefault()
-            ev.stopPropagation()
             const evId = ev.target.id()
             if (evId === id) {
-                onClick && onClick(ev)
+                return onClick?.(ev)
+            }
+        }
+        
+        function onEdgeContext(ev) {
+            const evId = ev.target.id()
+            if (evId === id) {
+                return onContextMenu?.(ev)
             }
         }
 
         cytoInstance.on('add', 'node', onAddNode);
         cytoInstance.on('remove', 'node', onRemoveNode);
         cytoInstance.on('tapend', 'edge', onEdgeClick)
-
+        cytoInstance.on('cxttapend', 'edge', onEdgeContext)
+        
         return () => {
             cytoInstance.getElementById(id).remove();
             cytoInstance.off('add', 'node', onAddNode);
             cytoInstance.off('remove', 'node', onRemoveNode);
             cytoInstance.off('tapend', 'edge', onEdgeClick)
+            cytoInstance.off('cxttapend', 'edge', onEdgeContext)
         };
     }, []);
 

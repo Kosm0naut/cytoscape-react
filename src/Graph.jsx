@@ -18,6 +18,7 @@ Cytoscape.use(CyDomNode);
 function Graph({
     cyParams, layoutParams, layoutDebounce, children,
 }, ref) {
+    const [ready, setReady] = useState(false)
     const domRef = useRef(null);
     const cytoscapeRef = useRef(null);
     const layoutRef = useRef(null);
@@ -55,11 +56,12 @@ function Graph({
         const cy = Cytoscape(augmentedCyParams);
         cy.domNode({ dom_container: domRef.current.querySelector('.cytoscape-react-nodes-and-edges') });
         cytoscapeRef.current = cy;
+        setReady(true)
     }, []);
 
     useEffect(() => {
         debouncedRunLayout();
-    }, [children]);
+    }, [children, ready]);
 
     let nodesAndEdges = [];
     if (cytoscapeRef.current !== null) {
